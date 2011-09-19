@@ -84,11 +84,20 @@ timer.ontick = function(td){
         var p = particles[i];
         p.vx = p.vx*0.8 + getNoise(p.x, p.y, 0)*4;//+fuzzy(1.0);
         p.vy = p.vy*0.8 + getNoise(p.x, p.y, 1)*4;//+fuzzy(1.0);
-        p.x += p.vx;
-        p.y += p.vy;
         p.age ++;
 
         ctx.beginPath();
+        p.x += p.vx*0.25;
+        p.y += p.vy*0.25;
+        ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
+        p.x += p.vx*0.25;
+        p.y += p.vy*0.25;
+        ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
+        p.x += p.vx*0.25;
+        p.y += p.vy*0.25;
+        ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
+        p.x += p.vx*0.25;
+        p.y += p.vy*0.25;
         ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
         ctx.closePath();
         ctx.fill();
