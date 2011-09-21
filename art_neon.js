@@ -1,5 +1,5 @@
 var particles = [],
-    color = 'rgb(12, 2, 2)',
+    color = 'rgb(10, 2, 2)',
     composite = 'lighter',
     max_age = 100,
     initial_radius = 5,
