@@ -13,20 +13,21 @@ var particles = [],
     b = 1.0,
     noiseCanvas = makeOctaveNoise(canvas.width, canvas.height, 8),
     noise = noiseCanvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data,
-    imgdata, data;
+    imgdata, data, hdrdata,
+    FloatArray = window.Float32Array || Array;
 
 var colors = [
-        {background: 'rgb(160, 10, 10)', value: [4, 1, 1]},
-        {background: 'rgb(200, 150, 50)', value: [3, 2, 1]},
+        {background: 'rgb(160, 10, 10)', value: [1, 0.10, 0.10]},
+        {background: 'rgb(200, 150, 50)', value: [1, 0.5, 0.1]},
 
-        {background: 'rgb(20, 150, 20)', value: [1, 3, 1]},
-        {background: 'rgb(25, 100, 75)', value: [1, 4, 3]},
+        {background: 'rgb(20, 150, 20)', value: [0.3, 1, 0.3]},
+        {background: 'rgb(25, 100, 75)', value: [0.25, 1, 0.75]},
 
-        {background: 'rgb(10, 10, 80)', value: [1, 1, 5]},
-        {background: 'rgb(75, 25, 100)', value: [3, 1, 4]},
+        {background: 'rgb(10, 10, 80)', value: [0.2, 0.2, 1]},
+        {background: 'rgb(75, 25, 100)', value: [0.75, 0.25, 1]},
 
-        {background: '#000', value: [-3, -3, -3]},
-        {background: '#fff', value: [3, 3, 3]}
+        {background: '#000', value: [-1, -1, -1]},
+        {background: '#fff', value: [1, 1, 1]}
     ],
     $colors = $('#colors');
 
@@ -43,11 +44,23 @@ $.each(colors, function(_, color){
 
 function clear(){
     _gaq.push(['_trackEvent', 'neonfuzz', 'clear']);
+    clearData();
+}
+
+function tonemap(n){
+    return (1-Math.pow(2, -n*0.005))*255;
+}
+
+function clearData(){
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     imgdata = ctx.getImageData(0, 0, canvas.width, canvas.height);
     data = imgdata.data;
+    hdrdata = new FloatArray(data.length);
+    for(var i = 0; i < hdrdata.length; i++) {
+        hdrdata[i] = 0;
+    }
 }
 
 function download(){
@@ -148,11 +161,10 @@ timer.ontick = function(td){
             if(p.x < 0 || p.x >= w || p.y < 0 || p.y >= h)
                 continue;
             var index = (~~p.x+~~p.y*canvas.width)*4;
-            data[index] += r;
-            data[index+1] += g;
-            data[index+2] += b;
+            data[index] = tonemap(hdrdata[index] += r);
+            data[index+1] = tonemap(hdrdata[index+1] += g);
+            data[index+2] = tonemap(hdrdata[index+2] += b);
         }
-        
 
         if(p.age < max_age){
             alive.push(p);
@@ -164,10 +176,7 @@ timer.ontick = function(td){
     particles = alive;
 }
 
-ctx.fillStyle = 'black';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-imgdata = ctx.getImageData(0, 0, canvas.width, canvas.height);
-data = imgdata.data;
+clearData();
 
 
 $('#colors li').click(function() {
