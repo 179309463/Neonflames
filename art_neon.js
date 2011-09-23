@@ -1,17 +1,53 @@
+/* TODO
+* invalidation
+* color management
+*/
 var particles = [],
-    color = 'rgb(10, 2, 2)',
+    color = 'rgb(4, 1, 1)',
     composite = 'lighter',
     max_age = 100,
     initial_radius = 5,
     lineWidth = 1.0,
+    r = 4.0,
+    g = 1.0,
+    b = 1.0,
     noiseCanvas = makeOctaveNoise(canvas.width, canvas.height, 8),
-    noise = noiseCanvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+    noise = noiseCanvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data,
+    imgdata, data;
+
+var colors = [
+        {background: 'rgb(160, 10, 10)', value: [4, 1, 1]},
+        {background: 'rgb(200, 150, 50)', value: [3, 2, 1]},
+
+        {background: 'rgb(20, 150, 20)', value: [1, 3, 1]},
+        {background: 'rgb(25, 100, 75)', value: [1, 4, 3]},
+
+        {background: 'rgb(10, 10, 80)', value: [1, 1, 5]},
+        {background: 'rgb(75, 25, 100)', value: [3, 1, 4]},
+
+        {background: '#000', value: [-3, -3, -3]},
+        {background: '#fff', value: [3, 3, 3]}
+    ],
+    $colors = $('#colors');
+
+$.each(colors, function(_, color){
+    var el = $('<li>')
+            .css('background-color', color.background)
+            .click(function() {
+                r = color.value[0];
+                g = color.value[1];
+                b = color.value[2];
+            });
+    $colors.append(el);
+});
 
 function clear(){
     _gaq.push(['_trackEvent', 'neonfuzz', 'clear']);
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    imgdata = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    data = imgdata.data;
 }
 
 function download(){
@@ -61,6 +97,8 @@ function fuzzy(range, base){
 }
 
 timer.ontick = function(td){
+    var w = canvas.width*1,
+        h = canvas.height*1;
     if(input.mouse.down){
         for(var i = 0; i < 10; i++){
             particles.push({
@@ -82,11 +120,11 @@ timer.ontick = function(td){
 
     for(var i = 0; i < particles.length; i++){
         var p = particles[i];
-        p.vx = p.vx*0.8 + getNoise(p.x, p.y, 0)*4;//+fuzzy(1.0);
-        p.vy = p.vy*0.8 + getNoise(p.x, p.y, 1)*4;//+fuzzy(1.0);
+        p.vx = p.vx*0.8 + getNoise(p.x, p.y, 0)*4+fuzzy(0.1);
+        p.vy = p.vy*0.8 + getNoise(p.x, p.y, 1)*4+fuzzy(0.1);
         p.age ++;
 
-        ctx.beginPath();
+/*        ctx.beginPath();
         p.x += p.vx*0.25;
         p.y += p.vy*0.25;
         ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
@@ -101,18 +139,36 @@ timer.ontick = function(td){
         ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
         ctx.closePath();
         ctx.fill();
-        //ctx.stroke();
+        //ctx.stroke();*/
+        //
+        //
+        for(var j = 0; j < 10; j++){
+            p.x += p.vx*0.1;
+            p.y += p.vy*0.1;
+            if(p.x < 0 || p.x >= w || p.y < 0 || p.y >= h)
+                continue;
+            var index = (~~p.x+~~p.y*canvas.width)*4;
+            data[index] += r;
+            data[index+1] += g;
+            data[index+2] += b;
+        }
         
+
         if(p.age < max_age){
             alive.push(p);
         }
     }
+
+    ctx.putImageData(imgdata, 0, 0);
 
     particles = alive;
 }
 
 ctx.fillStyle = 'black';
 ctx.fillRect(0, 0, canvas.width, canvas.height);
+imgdata = ctx.getImageData(0, 0, canvas.width, canvas.height);
+data = imgdata.data;
+
 
 $('#colors li').click(function() {
     $('#colors li').removeClass('active');
