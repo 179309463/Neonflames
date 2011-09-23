@@ -43,7 +43,7 @@ $.each(colors, function(_, color){
 });
 
 function clear(){
-    _gaq.push(['_trackEvent', 'neonfuzz', 'clear']);
+    _gaq.push(['_trackEvent', 'neonflames', 'clear']);
     clearData();
 }
 
@@ -64,12 +64,13 @@ function clearData(){
 }
 
 function download(){
-    _gaq.push(['_trackEvent', 'neonfuzz', 'download']);
-    window.open(canvas.toDataURL('image/jpeg', 0.9))
+    _gaq.push(['_trackEvent', 'neonflames', 'download']);
+    var w = window.open();
+    w.document.write('<p style="font-family: sans-serif;">right click, save as</p><img src="' + canvas.toDataURL() + '">');
 }
 
 function share(){
-    _gaq.push(['_trackEvent', 'neonfuzz', 'share']);
+    _gaq.push(['_trackEvent', 'neonflames', 'share']);
 
 
     try {
