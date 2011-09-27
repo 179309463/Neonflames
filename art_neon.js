@@ -1,16 +1,12 @@
-/* TODO
-* invalidation
-* color management
-*/
 var particles = [],
     color = 'rgb(4, 1, 1)',
     composite = 'lighter',
-    max_age = 100,
+    max_age = 70,
     initial_radius = 5,
     lineWidth = 1.0,
-    r = 4.0,
-    g = 1.0,
-    b = 1.0,
+    r = 1.0,
+    g = 0.1,
+    b = 0.1,
     noiseCanvas = makeOctaveNoise(canvas.width, canvas.height, 8),
     noise = noiseCanvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data,
     imgdata, data, hdrdata,
@@ -138,25 +134,7 @@ timer.ontick = function(td){
         p.vy = p.vy*0.8 + getNoise(p.x, p.y, 1)*4+fuzzy(0.1);
         p.age ++;
 
-/*        ctx.beginPath();
-        p.x += p.vx*0.25;
-        p.y += p.vy*0.25;
-        ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
-        p.x += p.vx*0.25;
-        p.y += p.vy*0.25;
-        ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
-        p.x += p.vx*0.25;
-        p.y += p.vy*0.25;
-        ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
-        p.x += p.vx*0.25;
-        p.y += p.vy*0.25;
-        ctx.arc(p.x, p.y, 0.5, 0, Math.PI*2, true);
-        ctx.closePath();
-        ctx.fill();
-        //ctx.stroke();*/
-        //
-        //
-        for(var j = 0; j < 10; j++){
+       for(var j = 0; j < 10; j++){
             p.x += p.vx*0.1;
             p.y += p.vy*0.1;
             if(p.x < 0 || p.x >= w || p.y < 0 || p.y >= h)
