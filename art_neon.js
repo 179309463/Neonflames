@@ -13,7 +13,7 @@ var particles = [],
     FloatArray = window.Float32Array || Array;
 
 var colors = [
-        {background: 'rgb(160, 10, 10)', value: [1, 0.10, 0.10]},
+        {background: 'rgb(160, 10, 10)', value: [r, g, b]},
         {background: 'rgb(200, 150, 50)', value: [1, 0.5, 0.1]},
 
         {background: 'rgb(20, 150, 20)', value: [0.3, 1, 0.3]},
@@ -34,9 +34,13 @@ $.each(colors, function(_, color){
                 r = color.value[0];
                 g = color.value[1];
                 b = color.value[2];
+                $('#colors li').removeClass('active');
+                $(this).addClass('active');
+                _gaq.push(['_trackEvent', 'neonflames', 'color', color.background]);
             });
     $colors.append(el);
 });
+$('#colors li:eq(0)').addClass('active');
 
 function clear(){
     _gaq.push(['_trackEvent', 'neonflames', 'clear']);
@@ -66,7 +70,6 @@ function download(){
 }
 
 function share(){
-    _gaq.push(['_trackEvent', 'neonflames', 'share']);
 
 
     try {
@@ -89,10 +92,13 @@ function share(){
         },
         dataType: 'json'
     }).success(function(data) {
-        w.location.href = data['upload']['links']['imgur_page'];
+        var url = data['upload']['links']['imgur_page'];
+        _gaq.push(['_trackEvent', 'neonflames', 'share', url]);
+        w.location.href = url;
     }).error(function() {
         alert('Could not reach api.imgur.com. Sorry :(');
         w.close();
+        _gaq.push(['_trackEvent', 'neonflames', 'share', 'fail!']);
     });
 }
 
@@ -156,9 +162,3 @@ timer.ontick = function(td){
 }
 
 clearData();
-
-
-$('#colors li').click(function() {
-    $('#colors li').removeClass('active');
-    $(this).addClass('active');
-});
