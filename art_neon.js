@@ -1,19 +1,71 @@
 var particles = [],
     color = 'rgb(4, 1, 1)',
     composite = 'lighter',
-    max_age = 70,
-    initial_radius = 5,
-    lineWidth = 1.0,
-    r = 1.0,
-    g = 0.1,
-    b = 0.1,
+    gui = new DAT.GUI(),
+    defaultOptions = {
+        maxAge : 70,
+        exposure: 1.0,
+        damping: 0.8,
+        noise: 1.0,
+        fuzz: 1.0,
+        initialXVelocity: 10,
+        initialYVelocity: 10,
+        spawn: 10
+    },
+    options = $.extend({
+        preset: 'default',
+        red : 1.0,
+        green : 0.1,
+        blue : 0.1,
+    }, defaultOptions),
+    presets = {
+        default: defaultOptions,
+        fine: $.extend({}, defaultOptions, {
+            damping: 0.2,
+            initialXVelocity: 15,
+            initialYVelocity: 15
+        }),
+        intense: $.extend({}, defaultOptions, {
+            exposure: 2,
+            maxAge: 100
+        }),
+        smooth: $.extend({}, defaultOptions, {
+            exposure: 0.1,
+            spawn: 100
+        }),
+        worms: $.extend({}, defaultOptions, {
+            exposure: 10,
+            spawn: 1,
+            fuzz: 5,
+            noise: 0.5,
+            maxAge: 100
+        })
+    },
     noiseCanvas = makeOctaveNoise(canvas.width, canvas.height, 8),
     noise = noiseCanvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data,
     imgdata, data, hdrdata,
     FloatArray = window.Float32Array || Array;
 
+
+gui.add(options, 'preset').options('default', 'fine', 'intense', 'smooth', 'worms').onChange(function(name) {
+    $.extend(options, presets[name]);
+    gui.listenAll();
+    _gaq.push(['_trackEvent', 'neonflames', 'preset', name]);
+});
+gui.add(options, 'red', -2, 2, 0.01).listen();
+gui.add(options, 'green', -2, 2, 0.01).listen();
+gui.add(options, 'blue', -2, 2, 0.01).listen();
+gui.add(options, 'spawn', 1, 500, 1);
+gui.add(options, 'maxAge', 1, 500, 1);
+gui.add(options, 'exposure', 0, 10, 0.01);
+gui.add(options, 'noise', 0, 10, 0.01);
+gui.add(options, 'fuzz', 0, 10, 0.01);
+gui.add(options, 'damping', 0, 1.2, 0.01);
+gui.add(options, 'initialXVelocity', 0, 100, 0.01);
+gui.add(options, 'initialYVelocity', 0, 100, 0.01);
+
 var colors = [
-        {background: 'rgb(160, 10, 10)', value: [r, g, b]},
+        {background: 'rgb(160, 10, 10)', value: [options.red, options.green, options.blue]},
         {background: 'rgb(200, 150, 50)', value: [1, 0.5, 0.1]},
 
         {background: 'rgb(20, 150, 20)', value: [0.3, 1, 0.3]},
@@ -31,9 +83,9 @@ $.each(colors, function(_, color){
     var el = $('<li>')
             .css('background-color', color.background)
             .click(function() {
-                r = color.value[0];
-                g = color.value[1];
-                b = color.value[2];
+                options.red = color.value[0];
+                options.green = color.value[1];
+                options.blue = color.value[2];
                 $('#colors li').removeClass('active');
                 $(this).addClass('active');
                 _gaq.push(['_trackEvent', 'neonflames', 'color', color.background]);
@@ -48,7 +100,7 @@ function clear(){
 }
 
 function tonemap(n){
-    return (1-Math.pow(2, -n*0.005))*255;
+    return (1-Math.pow(2, -n*0.005*options.exposure))*255;
 }
 
 function clearData(){
@@ -114,12 +166,21 @@ function fuzzy(range, base){
 
 timer.ontick = function(td){
     var w = canvas.width*1,
-        h = canvas.height*1;
+        h = canvas.height*1,
+        r = options.red,
+        g = options.green,
+        b = options.blue,
+        maxAge = options.maxAge,
+        vx = options.initialXVelocity;
+        vy = options.initialYVelocity,
+        damping = options.damping,
+        noisy = options.noise,
+        fuzz = options.fuzz;
     if(input.mouse.down){
-        for(var i = 0; i < 10; i++){
+        for(var i = 0; i < options.spawn; i++){
             particles.push({
-                vx: fuzzy(10.0),
-                vy: fuzzy(10.0),
+                vx: fuzzy(vx),
+                vy: fuzzy(vy),
                 x: input.mouse.x,
                 y: input.mouse.y,
                 age: 0
@@ -127,17 +188,12 @@ timer.ontick = function(td){
         }
     }
 
-    ctx.lineWidth = lineWidth;
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-    ctx.globalAlpha = 1.0;
-    ctx.globalCompositeOperation = composite;
     var alive = [];
 
     for(var i = 0; i < particles.length; i++){
         var p = particles[i];
-        p.vx = p.vx*0.8 + getNoise(p.x, p.y, 0)*4+fuzzy(0.1);
-        p.vy = p.vy*0.8 + getNoise(p.x, p.y, 1)*4+fuzzy(0.1);
+        p.vx = p.vx*damping + getNoise(p.x, p.y, 0)*4*noisy+fuzzy(0.1)*fuzz;
+        p.vy = p.vy*damping + getNoise(p.x, p.y, 1)*4*noisy+fuzzy(0.1)*fuzz;
         p.age ++;
 
        for(var j = 0; j < 10; j++){
@@ -151,7 +207,7 @@ timer.ontick = function(td){
             data[index+2] = tonemap(hdrdata[index+2] += b);
         }
 
-        if(p.age < max_age){
+        if(p.age < maxAge){
             alive.push(p);
         }
     }
