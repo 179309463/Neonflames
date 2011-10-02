@@ -37,6 +37,18 @@ var particles = [],
             intensity: 0.2,
             spawn: 100
         }),
+        undamped: $.extend({}, defaultOptions, {
+            noise: 10,
+            fuzz: 0.1,
+            damping: 0
+        }),
+        'pure noise': $.extend({}, defaultOptions, {
+            noise: 10,
+            fuzz: 0.0,
+            damping: 0,
+            initialXVelocity: 0,
+            initialYVelocity: 0
+        }),
         x: $.extend({}, defaultOptions, {
             initialXVelocity: 100,
             initialYVelocity: 1
@@ -59,7 +71,7 @@ var particles = [],
     FloatArray = window.Float32Array || Array;
 
 
-gui.add(options, 'preset').options('default', 'fine', 'intense', 'smooth', 'worms', 'x', 'y').onChange(function(name) {
+gui.add(options, 'preset').options('default', 'fine', 'intense', 'smooth', 'worms', 'x', 'y', 'undamped', 'pure noise').onChange(function(name) {
     $.extend(options, presets[name]);
     gui.listenAll();
     _gaq.push(['_trackEvent', 'neonflames', 'preset', name]);
