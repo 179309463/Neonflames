@@ -8,6 +8,7 @@ var particles = [],
         damping: 0.8,
         noise: 1.0,
         fuzz: 1.0,
+        intensity: 1.0,
         initialXVelocity: 10,
         initialYVelocity: 10,
         spawn: 10
@@ -21,20 +22,31 @@ var particles = [],
     presets = {
         default: defaultOptions,
         fine: $.extend({}, defaultOptions, {
-            damping: 0.2,
+            damping: 0.3,
+            intensity: 0.75,
+            noise: 2,
+            fuzz: 2,
             initialXVelocity: 15,
             initialYVelocity: 15
         }),
         intense: $.extend({}, defaultOptions, {
-            exposure: 2,
+            intensity: 3,
             maxAge: 100
         }),
         smooth: $.extend({}, defaultOptions, {
-            exposure: 0.1,
+            intensity: 0.2,
             spawn: 100
         }),
+        x: $.extend({}, defaultOptions, {
+            initialXVelocity: 100,
+            initialYVelocity: 1
+        }),
+        y: $.extend({}, defaultOptions, {
+            initialYVelocity: 100,
+            initialXVelocity: 1
+        }),
         worms: $.extend({}, defaultOptions, {
-            exposure: 10,
+            intensity: 10,
             spawn: 1,
             fuzz: 5,
             noise: 0.5,
@@ -47,7 +59,7 @@ var particles = [],
     FloatArray = window.Float32Array || Array;
 
 
-gui.add(options, 'preset').options('default', 'fine', 'intense', 'smooth', 'worms').onChange(function(name) {
+gui.add(options, 'preset').options('default', 'fine', 'intense', 'smooth', 'worms', 'x', 'y').onChange(function(name) {
     $.extend(options, presets[name]);
     gui.listenAll();
     _gaq.push(['_trackEvent', 'neonflames', 'preset', name]);
@@ -55,9 +67,10 @@ gui.add(options, 'preset').options('default', 'fine', 'intense', 'smooth', 'worm
 gui.add(options, 'red', -2, 2, 0.01).listen();
 gui.add(options, 'green', -2, 2, 0.01).listen();
 gui.add(options, 'blue', -2, 2, 0.01).listen();
-gui.add(options, 'spawn', 1, 500, 1);
+gui.add(options, 'intensity', 0, 5, 0.01);
+gui.add(options, 'spawn', 1, 100, 1);
 gui.add(options, 'maxAge', 1, 500, 1);
-gui.add(options, 'exposure', 0, 10, 0.01);
+gui.add(options, 'exposure', 0, 5, 0.01);
 gui.add(options, 'noise', 0, 10, 0.01);
 gui.add(options, 'fuzz', 0, 10, 0.01);
 gui.add(options, 'damping', 0, 1.2, 0.01);
@@ -175,7 +188,8 @@ timer.ontick = function(td){
         vy = options.initialYVelocity,
         damping = options.damping,
         noisy = options.noise,
-        fuzz = options.fuzz;
+        fuzz = options.fuzz,
+        intensity = options.intensity;
     if(input.mouse.down){
         for(var i = 0; i < options.spawn; i++){
             particles.push({
@@ -202,9 +216,9 @@ timer.ontick = function(td){
             if(p.x < 0 || p.x >= w || p.y < 0 || p.y >= h)
                 continue;
             var index = (~~p.x+~~p.y*canvas.width)*4;
-            data[index] = tonemap(hdrdata[index] += r);
-            data[index+1] = tonemap(hdrdata[index+1] += g);
-            data[index+2] = tonemap(hdrdata[index+2] += b);
+            data[index] = tonemap(hdrdata[index] += r*intensity);
+            data[index+1] = tonemap(hdrdata[index+1] += g*intensity);
+            data[index+2] = tonemap(hdrdata[index+2] += b*intensity);
         }
 
         if(p.age < maxAge){
