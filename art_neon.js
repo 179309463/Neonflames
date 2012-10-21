@@ -17,10 +17,10 @@ var particles = [],
         preset: 'default',
         red : 1.0,
         green : 0.1,
-        blue : 0.1,
+        blue : 0.1
     }, defaultOptions),
     presets = {
-        default: defaultOptions,
+        'default': defaultOptions,
         fine: $.extend({}, defaultOptions, {
             damping: 0.3,
             intensity: 0.75,
@@ -88,6 +88,7 @@ gui.add(options, 'fuzz', 0, 10, 0.01);
 gui.add(options, 'damping', 0, 1.2, 0.01);
 gui.add(options, 'initialXVelocity', 0, 100, 0.01);
 gui.add(options, 'initialYVelocity', 0, 100, 0.01);
+gui.close();
 
 var colors = [
         {background: 'rgb(160, 10, 10)', value: [options.red, options.green, options.blue]},
@@ -148,11 +149,11 @@ function download(){
 
 function share(){
 
-
+    var img;
     try {
-        var img = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
+        img = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
     } catch(e) {
-        var img = canvas.toDataURL().split(',')[1];
+        img = canvas.toDataURL().split(',')[1];
     }
     var w = window.open();
     w.document.write('Uploading...');
@@ -186,7 +187,7 @@ function getNoise(x, y, channel) {
 
 // base +/- range
 function fuzzy(range, base){
-    return (base||0) + (Math.random()-0.5)*range*2
+    return (base||0) + (Math.random()-0.5)*range*2;
 }
 
 timer.ontick = function(td){
@@ -196,14 +197,15 @@ timer.ontick = function(td){
         g = options.green,
         b = options.blue,
         maxAge = options.maxAge,
-        vx = options.initialXVelocity;
+        vx = options.initialXVelocity,
         vy = options.initialYVelocity,
         damping = options.damping,
         noisy = options.noise,
         fuzz = options.fuzz,
-        intensity = options.intensity;
+        intensity = options.intensity,
+        i;
     if(input.mouse.down){
-        for(var i = 0; i < options.spawn; i++){
+        for(i = 0; i < options.spawn; i++){
             particles.push({
                 vx: fuzzy(vx),
                 vy: fuzzy(vy),
@@ -216,7 +218,7 @@ timer.ontick = function(td){
 
     var alive = [];
 
-    for(var i = 0; i < particles.length; i++){
+    for(i = 0; i < particles.length; i++){
         var p = particles[i];
         p.vx = p.vx*damping + getNoise(p.x, p.y, 0)*4*noisy+fuzzy(0.1)*fuzz;
         p.vy = p.vy*damping + getNoise(p.x, p.y, 1)*4*noisy+fuzzy(0.1)*fuzz;
@@ -241,6 +243,6 @@ timer.ontick = function(td){
     ctx.putImageData(imgdata, 0, 0);
 
     particles = alive;
-}
+};
 
 clearData();
