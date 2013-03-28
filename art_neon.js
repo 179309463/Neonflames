@@ -156,27 +156,29 @@ function share(){
         img = canvas.toDataURL().split(',')[1];
     }
     var w = window.open();
-    w.document.write('Uploading...');
+    w.document.write('Uploading to imgur.com...');
     $.ajax({
-        url: 'http://api.imgur.com/2/upload.json',
+        url: 'https://api.imgur.com/3/upload.json',
         type: 'POST',
+        headers: {
+            Authorization: 'Client-ID cc01e3195c1adc2'
+        },
         data: {
             type: 'base64',
-            key: '48c16073663cb7d3befd1c2c064dfa0d',
             name: 'neon.jpg',
-            title: 'test title',
-            caption: 'test caption',
+            title: 'Nebula',
+            description: 'Made using http://29a.ch/sandbox/2011/neonflames/',
             image: img
         },
         dataType: 'json'
     }).success(function(data) {
-        var url = data['upload']['links']['imgur_page'];
+        var url = 'http://imgur.com/' + data.data.id + '?tags';
         _gaq.push(['_trackEvent', 'neonflames', 'share', url]);
         w.location.href = url;
     }).error(function() {
         alert('Could not reach api.imgur.com. Sorry :(');
         w.close();
-        _gaq.push(['_trackEvent', 'neonflames', 'share', 'fail!']);
+        _gaq.push(['_trackEvent', 'neonflames', 'share', 'fail']);
     });
 }
 
