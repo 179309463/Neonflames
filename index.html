@@ -1,67 +1,72 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>29a.ch - Neonflames</title>
-<link rel="stylesheet" href="art_neon.css" />
-<link href='http://fonts.googleapis.com/css?family=Michroma' rel='stylesheet' type='text/css'>
-<meta name="viewport" content="width=device-width, user-scalable=no,maximum-scale=1.0" />
-<meta property="og:type" content="website" />
-<meta property="og:description" content="Neonflames is a tool to draw your own nebula!">
-    <meta name="description" content="Neonflames is a tool to draw your own nebula!">
-<meta property="og:title" content="Neonflames - draw your own nebula!" />
-<meta property="og:url" content="http://29a.ch/sandbox/2011/neonflames/" />
-<meta property="og:image" content="http://29a.ch/sandbox/2011/neonflames/teaser-2.jpg" />
-</head>
-<body>
-  <h1><a href="http://29a.ch/">29a.ch</a></h1>
-  <p><a href="http://29a.ch/experiments/">More Experiments &amp; Toys</a></p>
-<div id="social">
-  <a href="http://twitter.com/share" class="twitter-share-button"
-    data-url="http://29a.ch/sandbox/2011/neonflames/"
-    data-text="Draw your own nebula right in your browser. :)"
-    data-count="horizontal" data-via="29a_ch">Tweet</a>
-<div class="fb-like" data-href="http://29a.ch/sandbox/2011/neonflames/" data-send="true" data-layout="button_count" data-width="145" data-show-faces="true" data-font="arial" data-colorscheme="light"></div>
-&nbsp;
- <div class="g-plusone" data-size="medium"
-   data-href="http://29a.ch/sandbox/2011/neonflames/" data-count="true"></div>
-</div> 
+    <head>
+        <title>Neonflames - 29a.ch</title>
+        <link rel="stylesheet" href="style.css" />
+        <link href='http://fonts.googleapis.com/css?family=Michroma' rel='stylesheet' type='text/css'>
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, user-scalable=no,maximum-scale=1.0" />
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content="Neonflames is a tool to draw your own nebula!">
+        <meta name="description" content="Neonflames is a tool to draw your own nebula!">
+        <meta property="og:title" content="Neonflames - draw your own nebula!" />
+        <meta property="og:url" content="http://29a.ch/sandbox/2011/neonflames/" />
+        <meta property="og:image" content="http://29a.ch/sandbox/2011/neonflames/teaser-2.jpg" />
+    </head>
+    <body>
+        <div id=header>
+            <div class=actions>
+                <a href="#" id="clear" class="button" onclick="clear();"><span>Clear</span> <i class='fa fa-times'></i></a>
+                <a href="#" id="share" class="button" onclick="share();"><span>Share</span> <i class='fa fa-cloud-upload'></i></a>
+                <a href="#" id="download" class="button" onclick="download();"><span>Download</span> <i class='fa fa-download'></i></a>
+                <a href="#" class="button" onclick="tweak();"><span>Tweak</span> <i class='fa fa-cog'></i></a>
+            </div>
 
-<ul id="colors"></ul>
-<a href="#" id="clear" class="button" onclick="window.clear();">Clear</a>
-<a href="#" id="share" class="button" onclick="window.share();">Share Image</a>
-<a href="#" id="download" class="button" onclick="window.download();">Download</a>
-<canvas id=c width=800 height=600></canvas>
-<noscript>noscript, no fun.</noscript>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script src="input.js"></script>
-<script src="clock.js"></script>
-<script src="common.js"></script>
-<script src="noise.js"></script>
-<script src="DAT.GUI.min.js"></script>
-<script src="art_neon.js"></script>
-<script type="text/javascript" src="http://platform.twitter.com/widgets.js" async defer></script>
-<script type="text/javascript" src="https://apis.google.com/js/plusone.js" async></script>
-<script type="text/javascript">
+            <h1><a href="http://29a.ch/">29a.ch</a></h1>
+            <p><a href="http://29a.ch/experiments/">More Experiments &amp; Toys</a></p>
+            <div id="social">
+                <a href="http://twitter.com/share" class="twitter-share-button"
+                    data-url="http://29a.ch/sandbox/2011/neonflames/"
+                    data-text="Draw your own nebula right in your browser. :)"
+                    data-count="horizontal" data-via="29a_ch">Tweet</a>
+                <div class="fb-like" data-href="http://29a.ch/sandbox/2011/neonflames/" data-send="true" data-layout="button_count" data-width="145" data-show-faces="true" data-font="arial" data-colorscheme="light"></div>
+                &nbsp;
+                <div class="g-plusone" data-size="medium"
+                    data-href="http://29a.ch/sandbox/2011/neonflames/" data-count="true"></div>
+            </div> 
+        </div>
+        <ul id="colors"></ul>
+        <canvas id=c width=800 height=600></canvas>
+        <noscript>noscript, no fun.</noscript>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+        <script src="input.js"></script>
+        <script src="clock.js"></script>
+        <script src="common.js"></script>
+        <script src="noise.js"></script>
+        <script src="DAT.GUI.min.js"></script>
+        <script src="art_neon.js"></script>
+        <script type="text/javascript" src="http://platform.twitter.com/widgets.js" async defer></script>
+        <script type="text/javascript" src="https://apis.google.com/js/plusone.js" async defer></script>
+        <script type="text/javascript">
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-5205069-2']);
-  _gaq.push(['_trackPageview']);
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-5205069-2']);
+        _gaq.push(['_trackPageview']);
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
+        (function() {
+         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script><F5>
-
-</body>
+        </script>
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+    </body>
 </html>

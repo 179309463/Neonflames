@@ -247,4 +247,8 @@ timer.ontick = function(td){
     particles = alive;
 };
 
+function tweak(){
+    gui.toggle();
+}
+
 clearData();
