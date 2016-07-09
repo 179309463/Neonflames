@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Neonflames - 29a.ch</title>
+        <% if(dev) { %>
+        <link rel="stylesheet" href="<%= fileRev('app.css') %>" />
+        <% } else { %>
+        <style><%- inline('app.css') %></style>
+        <% } %>
+        <meta name="viewport" content="width=device-width, user-scalable=no,maximum-scale=1.0" />
+        <meta property="fb:app_id" content="829086800516580" />
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content="Neonflames is a tool to draw your own nebula!">
+        <meta name="description" content="Neonflames is a calming tool to draw your own nebula!">
+        <meta property="og:title" content="Neonflames - draw your own nebula!" />
+        <meta property="og:url" content="http://29a.ch/sandbox/2011/neonflames/" />
+        <meta property="og:image" content="https://29a.ch/sandbox/2011/neonflames/teaser-2.jpg" />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:description" content="Neonflames is a calming tool to draw your own nebula!">
+        <meta property="twitter:creator" content="@29a_ch" />
+        <meta property="twitter:title" content="Neonflames - draw your own nebula!" />
+        <meta property="twitter:site" content="@29a_ch" />
+        <meta property="twitter:creator" content="@29a_ch" />
+        <meta property="twitter:image" content="https://29a.ch/sandbox/2011/neonflames/teaser-2.jpg" />
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="robots" content="noindex">
+    </head>
+    <body>
+        <div id=header>
+            <h1><a href="//29a.ch/">29a.ch</a></h1>
+            <p><a href="//29a.ch/experiments/" class=translate>More Experiments &amp; Toys</a></p>
+
+            <div class=actions>
+                <div class=toggle-actions><i class='fa fa-bars'></i></div>
+                <a href="#" id="clear" class="button" onclick="neonflames.clear();"><span class=translate>Clear</span> <i class='fa fa-times'></i></a>
+                <a href="#" id="share" class="button" onclick="neonflames.share();"><span class=translate>Share</span> <i class='fa fa-cloud-upload'></i></a>
+                <a href="#" id="download" class="button" onclick="neonflames.download();"><span class=translate>Download</span> <i class='fa fa-download'></i></a>
+                <a href="#" class="button" onclick="neonflames.tweak();"><span class=translate>Tweak</span> <i class='fa fa-cog'></i></a>
+            </div>
+
+            <div id="social">
+                <a href="//twitter.com/share" class="twitter-share-button"
+                    data-url="https://29a.ch/sandbox/2011/neonflames/"
+                    data-text="Draw your own nebula right in your browser. :)"
+                    data-count="horizontal" data-via="29a_ch">Tweet</a>
+                <div class="fb-like" data-href="http://29a.ch/sandbox/2011/neonflames/" data-send="true" data-layout="button_count" data-width="145" data-show-faces="true" data-font="arial" data-colorscheme="light"></div>
+                &nbsp;
+                <div class="g-plusone" data-size="medium"
+                    data-href="https://29a.ch/sandbox/2011/neonflames/" data-count="true"></div>
+            </div>
+        </div>
+        <ul id="colors"></ul>
+        <canvas id=c width=1 height=1></canvas>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-5205069-2', 'auto');
+            ga('send', 'pageview');
+        </script>
+        <script src="<%= fileRev('app.js') %>" async defer></script>
+        <script type="text/javascript" src="//platform.twitter.com/widgets.js" async defer></script>
+        <script type="text/javascript" src="//apis.google.com/js/platform.js" async defer></script>
+        <div id="fb-root"></div>
+        <script id='facebook-jssdk' src='//connect.facebook.net/en_US/all.js#xfbml=1' async defer></script>
+        <link href='//fonts.googleapis.com/css?family=Michroma' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+    </body>
+</html>
